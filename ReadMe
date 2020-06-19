@@ -1,1 +1,5 @@
 This GitHub contains all the code that I developed for AIML PGP diploma.
+All files are uploaded in the .py format and include all the packages in every file.
+Each file is based on individual question. If a question relies on work done in the previous question, the previous question's code will be included in the current question's .py file so that one can run just the current file for the current question.
+All files will be named using the following template: (Abbreviated Institution Name)-(Abbreviated Program Name)-(Project Number)-(Question Number).py. For example, project 1 question 1 will have the following name: UTAGL-AIML-Project1-Q1.py. 
+Any questions please feel free to ask me.
