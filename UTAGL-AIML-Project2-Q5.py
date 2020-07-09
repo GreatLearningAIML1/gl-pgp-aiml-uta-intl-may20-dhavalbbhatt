@@ -78,7 +78,7 @@ x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.3, random_
 #    whereas 91% did not).
 # 3) Using class_weights='balanced' therefore skews the results and does not provide accurate balance between
 #    between positives and negatives. This is clearly reflected in recall and precision (as determined by
-#    the F1-score). While it does improve the AUC, the AUC does not account for data imbalance.
+#    the F1-score). While it does improve the AUC, the AUC does not account for class imbalance.
 # 4) The question - which model performs better? - is a subjective question - and one that cannot be answered without
 #    truly understanding the business requirements. Having said that, the case study presented here is a,
 #    marketing problem - wherein business users want to target as many people as they possibly can, meaning,
@@ -86,11 +86,11 @@ x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.3, random_
 #    to fewer). This allows the marketing department to target more people based on different criteria
 #    as compared to fewer people as would happen in the case of more False Negatives.
 #    As a result, a good way to judge how effective a model will be is done by looking at the
-#    Precision score - a higher Precision score and a lower Recall score is a better indicator
+#    Precision score - a higher Recall score and a lower Precision score is a better indicator
 #    (or higher F1-score) of a good model.
 # 5) Using the logic presented in bullet point number 4, I am taking the approach of not using class_weight='balanced'
-#    rather using the default "Auto" value for class_weight parameter. This results in a lower AUC, but a higher
-#    F1-score and hence a better model for the business problem at hand.
+#    rather assigning weights based on my understanding of where the marketing team wants to see how many people
+#    may end up purchasing the loan. This results in an overall better AUC as well as better F1 score.
 
 # Trying different SOLVERS (NB: all solver can be used with l2,
 # only 'liblinear' and 'saga' work with both 'l1' and 'l2'
@@ -151,9 +151,9 @@ print("*" * 50)
 
 # ############################################################################################################
 # ############# FINAL MODEL DEVELOPMENT BASED ON PARAMETER CHANGES AND RESULTS OF VARIOUS SCORES
-
+w = {0: 15, 1: 85}
 model = LogisticRegression(random_state=1, max_iter=5000, solver='newton-cg', C=0.75, penalty='l2',
-                           class_weight='balanced')
+                           class_weight=w)
 model.fit(x_train, y_train)
 
 # Prediction metric
@@ -179,7 +179,6 @@ print("*" * 50)
 print("Brier Score Loss for Improved Model: ", metrics.brier_score_loss(y_test, y_predict))
 print("*" * 50)
 print("*" * 50)
-
 # Confusion Matrix
 draw_cm(y_test, y_predict)
 

@@ -117,6 +117,7 @@ pval_filter = lgcoef['pval'] <= 0.1
 print(lgcoef[pval_filter])
 print("*" * 50)
 
+# ############# CREATE REGRESSION MODEL (Most Parameters are DEFAULT FOR NOW, Q5 has a better model)
 model = LogisticRegression(random_state=1, max_iter=5000, solver='liblinear')
 model.fit(x_train, y_train)
 
