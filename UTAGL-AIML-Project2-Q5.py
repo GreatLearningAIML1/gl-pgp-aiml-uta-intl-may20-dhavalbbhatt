@@ -34,8 +34,8 @@ data = data.drop(['ID'], axis=1)
 data = data[data['ZIP Code'] != 9307]
 
 # Replace Negative Values for EXPERIENCE ################
-num = data['Experience']._get_numeric_data()
-data['Experience'].replace(num[num < 0], 0, inplace=True)
+# num = data['Experience']._get_numeric_data()
+data['Experience'].replace({-1: 1, -2: 2, -3: 3}, inplace=True)
 
 # #################### ONE HOT ENCODING FOR EDUCATION
 data['Education'] = data['Education'].replace({1: 'Undergrad', 2: 'Grad', 3: 'AP'})
