@@ -198,3 +198,6 @@ plt.title('Receiver operating characteristic')
 plt.legend(loc="lower right")
 plt.savefig('Log_ROC')
 plt.show()
+
+print("ROC AUC Score for Improved Model: ", metrics.auc(fpr, tpr))
+print("*" * 50)
