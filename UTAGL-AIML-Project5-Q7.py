@@ -36,11 +36,40 @@ kmeans_temp = kmeanscluster[kmeanscluster.Group == 1]
 print(kmeans_temp.head())
 print('*' * 100)
 hc_temp = hccluster[hccluster.Group == 3]
-hc_temp['Group'].replace({3:1}, inplace=True)
+hc_temp['Group'].replace({3: 1}, inplace=True)
 print(hc_temp.head())
 print('*' * 100)
 
 print(pd.concat([kmeans_temp, hc_temp]).drop_duplicates(keep=False))
-
-# As can be seen from the above, customer with key = 49331 seems to have fallen off between the two clusters using
+print('*' * 100)
+# As can be seen from the above, customer with key = 49331 seems to have changed clusters using
 # different methods.
+# As a result, it is OK to further analyze the data for just one of the cluster methods - in this case, I will be
+# using kmeans clustering for further analyses.
+
+# ###########################################
+# Look for means for each column in kmeans clustering
+print(kmeanscluster[kmeanscluster.Group == 1].mean())
+print('*' * 100)
+print(kmeanscluster[kmeanscluster.Group == 2].mean())
+print('*' * 100)
+print(kmeanscluster[kmeanscluster.Group == 0].mean())
+print('*' * 100)
+# ###########################################
+# 1)    As can be seen from the above means, it is clear that Average Credit Limit seems to be a big driver in terms of
+#       how the data is segmented. Group with label = 2 seems to have the highest average credit limit and it can be
+#       inferred that they have high spending limit. It is also seen in the number of credit cards that they have -
+#       almost 9 credit cards. It is possible that these customers will be spending more and hence the marketing
+#       teams may approach them differently.
+# 2)    For group = 0, it seems that they have the lowest credit limit and they seem to be making more calls as well.
+#       This may be important for the operations teams to understand and try and address their concerns. For
+#       marketing team it is important to understand that the credit limit is very low when compared to other two
+#       groups. Marketing teams may need to cater to customers in this group differently than the other two clusters.
+# 3)    Group = 1 seems to have customers with middling credit limit and need to be catered accordingly.
+# 4)    With regards to the operations team, it seems that customers in group 0 seem to be making the most number of
+#       calls. Additionally, their online visits are also relatively high. This does not provide enough information
+#       to identify if there is a good recommendation that I can make with regards to servicing customers in group
+#       0. On the other hand, customers with high credit limit seem to make fewer calls. Their online visit is also
+#       relatively high. One HYPOTHESIS that I can make (it may or may not be right) is that if we can answer
+#       questions online, especially for those with low credit limit, then may be there may be a better way to serve
+#       group 0 customers.

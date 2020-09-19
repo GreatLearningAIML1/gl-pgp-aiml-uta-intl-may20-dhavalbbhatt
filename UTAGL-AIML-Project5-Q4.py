@@ -48,22 +48,39 @@ data_mkt = data_mkt.apply(zscore)
 
 # Try out various methods for finding which method to use
 link_methods = ['single', 'complete', 'average', 'weighted', 'centroid', 'ward']
+z_ops_cc = pd.DataFrame({'Method': [], 'CC_val': 0})
+z_mkt_cc = pd.DataFrame({'Method': [], 'CC_val': 0})
 
 for k in link_methods:
+    method = [k]
     z_ops = linkage(data_ops, method=k, metric='euclidean')
-    print("Linkage score for z_ops and k = {0} is\n{1}".format(k, z_ops[:]))
+    c, coph_dist_ops = cophenet(z_ops, pdist(data_ops))
+    print("CC value for OPS data with k = {0} is {1}".format(k, c))
     print('*' * 100)
-    denfig(z_ops)
+    ops_cc = pd.DataFrame({'Method': method, 'CC_val': c})
+    z_ops_cc = z_ops_cc.append(ops_cc)
+    # print("Linkage score for z_ops and k = {0} is\n{1}".format(k, z_ops[:]))
+    # print('*' * 100)
+    # denfig(z_ops)
 
     z_mkt = linkage(data_mkt, method=k, metric='euclidean')
-    print("Linkage score for z_mkt and k = {0} is\n{1}".format(k, z_mkt[:]))
+    c, coph_dist_mkt = cophenet(z_mkt, pdist(data_mkt))
+    print("CC value for MKT data with k = {0} is {1}".format(k, c))
     print('*' * 100)
-    denfig(z_mkt)
+    mkt_cc = pd.DataFrame({'Method': method, 'CC_val': c})
+    z_mkt_cc = z_mkt_cc.append(mkt_cc)
+    # print("Linkage score for z_mkt and k = {0} is\n{1}".format(k, z_mkt[:]))
+    # print('*' * 100)
+    # denfig(z_mkt)
 
+print("CC scores for OPS Data\n{}".format(z_ops_cc))
+print('*' * 100)
+print('CC scores for MKT Data\n{}'.format(z_mkt_cc))
+print('*' * 100)
 # ###########################################
 # Find out best cluster number based on max distance
-z_ops = linkage(data_ops, method='ward', metric='euclidean')
-z_mkt = linkage(data_mkt, method='ward', metric='euclidean')
+z_ops = linkage(coph_dist_ops, method='centroid', metric='euclidean')
+z_mkt = linkage(coph_dist_mkt, method='centroid', metric='euclidean')
 
 max_d = [1, 10, 50, 18]
 for d in max_d:
@@ -90,13 +107,13 @@ plt.show()
 #
 # ###########################################
 # Plot Dendograms for z_mkt with ward method and truncate mode of 4
-plt.figure(figsize=(30, 15))
+plt.figure(figsize=(25, 15))
 plt.title('Z_MKT DENDOGRAM')
 dendrogram(z_mkt, truncate_mode='lastp', p=3)
 plt.show()
 
 # ###########################################
-# Silhouette score for OPS and MKT using ward and distance of 15
+# Silhouette score for OPS and MKT using ward and distance of 18
 ops_clusters = fcluster(z_ops, t=18, criterion='distance')
 mkt_clusters = fcluster(z_mkt, t=18, criterion='distance')
 
